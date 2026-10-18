@@ -1,0 +1,4 @@
+project_id = "zman-bekef"
+
+[functions.zman-push]
+verify_jwt = false
