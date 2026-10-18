@@ -40,3 +40,16 @@ create policy "zman delete" on zman_items for delete using (is_member(household_
 do $$ begin
   begin alter publication supabase_realtime add table zman_items; exception when others then null; end;
 end $$;
+
+-- זמנים תפוסים של משימות פרטיות של בני הבית — רק "מתי", בלי "מה" (בשביל התראות על התנגשויות). רק להורים.
+create or replace function zman_busy(h uuid)
+returns table (id text, created_by uuid, assignee uuid, for_p text, due text, dur int)
+language sql security definer stable set search_path = public as $$
+  select z.id, z.created_by, z.assignee, z.data->>'forP', z.data->>'due', coalesce((z.data->>'dur')::int, 0)
+  from zman_items z
+  where z.household_id = h and is_parent(h) and z.private and not z.deleted
+    and z.data->>'status' = 'open' and z.data->>'due' is not null and coalesce(z.data->>'hasTime', 'false') = 'true'
+    and z.created_by <> auth.uid();
+$$;
+revoke all on function zman_busy(uuid) from public, anon;
+grant execute on function zman_busy(uuid) to authenticated;
