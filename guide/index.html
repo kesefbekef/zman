@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>זמן בכיף</title>
+<style>body{font-family:system-ui,sans-serif;background:#0A0A12;color:#fff;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:20px}a{color:#F9A8D4;font-size:20px}</style>
+<script>
+// "זמן בכיף" לא יושבת כאן (זו הכתובת של כסף בכיף). מעבירים לכתובת הנפרדת שלה.
+// מנקים רק את מה ששייך לזמן בכיף — לא נוגעים בכסף בכיף.
+(async function () {
+  var path = location.pathname.indexOf('/guide') >= 0 ? 'guide/' : '';
+  var to = 'https://zd0542964361.github.io/zman-bekef/' + path + location.search + location.hash;
+  try { var regs = await navigator.serviceWorker.getRegistrations(); for (var r of regs) if (r.scope.indexOf('/zman/') >= 0) await r.unregister(); } catch (e) {}
+  try { var ks = await caches.keys(); for (var k of ks) if (k.indexOf('zman-') === 0) await caches.delete(k); } catch (e) {}
+  location.replace(to);
+})();
+</script></head>
+<body><div><div style="font-size:60px">⏰</div><h2>זמן בכיף</h2><p><a href="https://zd0542964361.github.io/zman-bekef/">לחצו כאן ←</a></p></div></body></html>
